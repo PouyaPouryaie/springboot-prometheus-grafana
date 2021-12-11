@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 10s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts when communicating with external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'sample-monitor'
+
+# A scrape configuration containing exactly one endpoint to scrape: Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=` to any time series scraped from this config.
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    #prometheus end point. We are using the Docker, so local host will not work. You can change it with localhost if not using the Docker.
+    static_configs:
+      - targets: ['172.30.22.124:9090']
+
+  # Details to connect Prometheus with Spring Boot actuator end point to scrap the data
+  # The job name is added as a label `job=` to any time series scraped from this config.
+  - job_name: 'spring-actuator'
+   
+    # Actuator end point to collect the data. 
+    metrics_path: '/actuator/prometheus'
+
+    #How frequently to scape the data from the end point
+    scrape_interval: 5s
+
+    #target end point. We are using the Docker, so local host will not work. You can change it with localhost if not using the Docker.
+    static_configs:
+    - targets: ['172.30.22.124:8080']
